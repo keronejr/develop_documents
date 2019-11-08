@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+   <meta charset="utf-8"/>
+   <meta name="viewport" content="width=device-width, user-scalable=no"/>
+  
+   <link href="/webjars/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
+   <link href="/css/style.css" rel="stylesheet"/>
+   
+   <script src="/webjars/jquery/3.0.0/jquery.min.js"></script>
+   <script src="/webjars/jquery-mask-plugin/1.14.15/dist/jquery.mask.min.js"></script>
+   <script src="/webjars/jquery-mask-plugin/1.14.15/src/jquery.mask.min.js"></script>
+   <script src="/webjars/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+  
+<body>
+<div class="container">
+   <div class="jumbotron">
+            <h1>SportsX</h1>
+   </div>
+   
+   <script type="text/javascript">
+            function alterarTipo(val,id) {
+                if (id != null) 
+            		document.location.href='/SportsX/cliente/'+val+'/tipo/'+id;
+                else 
+            		document.location.href='/SportsX/cliente/'+val+'/tipo';
+            }
+   </script>   
+   
+<form th:action="@{/SportsX/cliente/salvar}" th:method="${cliente.id} == null ? post : put" th:object="${cliente}"> 
+   
+    <input id="id" type="hidden" th:field="*{id}" />
+    
+    <div class="row">
+        <div class="col-md-4">
+            <input th:if="${cliente.id} == null ? true : ${cliente.tipo} == 'PF'" type="radio" name="tipo" value="PF" th:field="*{tipo}" th:onclick="'alterarTipo(' + this.value + ', ' + ${cliente.id} + ');'"/> <Strong th:if="${cliente.id} == null ? true : ${cliente.tipo} == 'PF'">Pessoa Física</Strong> &nbsp;&nbsp;
+            <input th:if="${cliente.id} == null ? true : ${cliente.tipo} == 'PJ'" type="radio" name="tipo" value="PJ" th:field="*{tipo}" th:onclick="'alterarTipo(' + this.value + ', ' + ${cliente.id} + ');'"/> <Strong th:if="${cliente.id} == null ? true : ${cliente.tipo} == 'PJ'">Pessoa Jurídica</Strong>
+        </div>
+
+        <div class="col-md-8" dir="rtl" align="right">
+            <!-- <a href="/" id="cancel" name="cancel" class="btn btn-default btn-warning">Cancelar</a> -->
+            <!-- <asp:Button ID="btnCancelar"  CssClass="btn btn-primary btn-warning" OnClick="cancelarCliente" Text="Cancelar" /> -->
+            <input type="button" name="btnCancelar" value="Cancelar" id="btnCancelar" data-toggle="modal" data-target="#confirm-cancelar" class="btn btn-default btn-warning" />
+            <!-- <asp:Button ID="btnExcluir"  CssClass="btn btn-primary btn-danger" OnClick="exluirCliente" Text="Excluir" /> -->
+            <input th:if="${cliente.id != null}" type="button" name="btnExcluir" value="Excluir" id="btnExcluir" data-toggle="modal" data-target="#confirm-excluir" class="btn btn-default btn-danger" />
+            <!-- <asp:Button ID="btnSalvar" ValidateRequestMode="Disabled"  CssClass="btn btn-primary btn-success" OnClick="salvarCliente" Text="Salvar" /> -->
+            <!-- <input type="button" name="btnSalvar" value="Salvar" id="btnSalvar" data-toggle="modal" data-target="#confirm-salvar" class="btn btn-default btn-success" /> -->
+            <button class="btn btn-default btn-success" type="button" name="btnSalvar" data-toggle="modal" data-target="#confirm-salvar">Salvar</button>
+        </div>
+    </div>
+    <hr />   
+
+    <div class="row">
+      <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-4">
+                <div id="campoNome" >
+                  <label for="nome">Nome</label>
+                  <input th:field="*{nome}" type="text"  class="form-control" id="nome" name="nome" required="required" placeholder="Nome" maxlength="100" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div th:if="${cliente.tipo == 'PJ'}" id="campoRazaoSocial" >
+                   <label for="razaoSocial">Razão Social</label>
+                   <input th:field="*{razao_social}" type="text"  class="form-control" id="razaoSocial" name="razaoSocial" placeholder="Razão Social" maxlength="100" />
+                </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4"> 
+                <div th:if="${cliente.tipo == 'PF'}" id="campoCPF" >
+                 <label for="cpf">CPF</label>
+                 <input th:field="*{cpf}" type="text" class="form-control" id="cpf" name="cpf" data-mask="000.000.000-00" placeholder="000.000.000-00" Maxlength="11" />
+                </div>
+           </div>
+           <div class="col-md-4">
+                <div th:if="${cliente.tipo == 'PJ'}" id="campoCNPJ" >
+                 <label for="cnpj">CNPJ</label>
+                 <input th:field="*{cnpj}" type="text"  class="form-control" id="cnpj" name="cpnj" data-mask="00.000.000/0000-00" placeholder="00.000.000/0000-00" maxlength="14" />
+                </div>
+           </div>
+         </div>
+
+          <div class="row">
+            <div class="col-md-4">
+                <div id="campoEmail" >
+                  <label for="email">e-mail</label>
+                  <input th:field="*{email}" type="email"  class="form-control" id="email" name="email" required="required" placeholder="e-mail" maxlength="100" />
+                </div>
+           </div>
+           <div class="col-md-4">
+                <div id="campoCep" >
+                 <label for="cep">CEP</label>
+                 <input th:field="*{cep}" type="text"  class="form-control" id="cep" name="cep" data-mask="00.000-000" placeholder="00.000-000" maxlength="14"/>
+                </div>
+           </div>
+         </div>
+
+     </div>
+         
+     <div class="col-md-4">
+
+         <div id="campoClassificacao">
+            <label>Classificação</label>
+            <select th:field="*{classificacao}" name="classificacao" class="form-control">
+            	<option value="A" selected="selected">Ativo</option>
+            	<option value="I">Inativo</option>
+            	<option value="P">Preferencial</option>
+            </select>
+         </div>
+         <div id="campoPontos">
+                 <label for="pontos">Pontos</label>
+                 <input th:field="*{pontos}" type="text"  onkeypress="return isNumberKey(event)" class=" form-control" required="required" id="pontos" name="pontos" data-mask="0000" placeholder="0000" maxlength="14" />
+         </div>
+
+         <div id="campoDesconto">
+                 <label class="display-4" style="font-size:xx-large">Desconto:</label> &nbsp;
+                 <label class="text-info" style="color:red;font-size:xx-large"  id="descontoStr" th:value="*{descontoStr}" th:text="*{descontoStr}"></label>
+         </div>
+    </div>
+  </div>    
+	
+	
+          <div class="row">
+         	<div class="col-md-4 form-inline">
+          	<label >Telefone</label>
+          	</div>
+          </div>	
+          
+<div class="row">
+	<div class="col-md-4 form-inline" >
+		<input th:field="*{telefone}" type="text"  onkeypress="return isNumberKey(event)" class=" form-control" id="telefone" name="telefone" data-mask="0000" placeholder="0000" maxlength="14" />
+		<!-- <a  id="btnAddTelefone"  class="btn btn-default btn-success">+</a> 
+		<br/>
+		<small>Pressione + para adicionar um novo telefone</small>-->
+	</div>
+	<!-- <div class="col-md-4">
+		<table class="table">
+            <thead>
+            <tr> <th>Número</th> <th>Remover</th></tr>
+            </thead>
+            
+                <tr th:each="telefone, itemStat : ${listaTelefoneWrapper.listaTelefones}">
+                    <td><input class="form-control" th:field="${listaTelefoneWrapper.listaTelefones[__${itemStat.index}__].numero}" /></td>
+					<td>
+                    	<a class="btn btn-sm btn-default btn-danger" >-</a>
+                    	<!- - th:href="@{/SportsX/cliente/{id}/telefone/{idxTel}/remover(id=*{id},idxTel=${itemStat.index})}" - ->
+                    <!- - <a class="btn btn-sm btn-danger" th:href="@{/playlists/{id}/remover(id=${cliente.id})}">Excluir</a>  - ->
+                	</td>                    
+                </tr>            
+        </table>
+	</div> -->
+</div>
+
+ 
+<hr/>
+   <footer class="footer">
+       <p>© 2019 SportsX</p>
+   </footer>
+
+
+<div class="modal fade" id="confirm-salvar" tabindex="-1" role="dialog" aria-labelledby="Confirmar Salvar">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+               Confirmaçäo de Salvamento
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja salvar este cliente ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                <button type="submit" id="btnMSalvar"  class="btn btn-default btn-success">Sim</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirm-excluir" tabindex="-1" role="dialog" aria-labelledby="Confirmar Excluir" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+               Confirmaçäo de Exclusão
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja excluir este cliente ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                <a th:href="@{/SportsX/cliente/{id}/excluir(id=${cliente.id})}" id="btnMExcluir"  class="btn btn-default btn-danger">Sim</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="confirm-cancelar" tabindex="-1" role="dialog" aria-labelledby="Confirmar Cancelar" >
+
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+               Confirmaçäo de Cancelamento
+            </div>
+            <div class="modal-body">
+                Tem certeza que deseja cancelar a operação ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Não</button>
+                <a href="/SportsX/" id="btnMCancelar"  class="btn btn-default btn-warning">Sim</a>
+            </div>
+        </div>
+    </div>
+</div>
+</form>  
+</div> <!-- FINAL DO CONTAINER -->
+</body>
+</html>   

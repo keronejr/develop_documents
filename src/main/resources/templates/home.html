@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+  
+<head>
+   <meta charset="utf-8"/>
+   <meta name="viewport" content="width=device-width, user-scalable=no"/>
+  
+   <link href="/webjars/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"/>
+   <link href="/css/style.css" rel="stylesheet"/>
+</head>
+  
+<body>
+<div class="container">
+
+        <div th:if="${mensagem != null}">
+              <div class="alert alert-success alert-dismissible">
+			    <a href="/SportsX/" class="close" data-dismiss="alert" aria-label="Fechar">&times;</a>
+			    <span th:text="${mensagem}">mensagem</span>
+			  </div>
+        </div>	
+
+   <div class="jumbotron">
+            <h1>SportsX</h1>
+   </div>
+   
+   <script type="text/javascript">
+            function alterarTipo(val) {
+            	document.location.href='/SportsX/filtrar/'+val;
+            }
+   </script>
+   
+   	<div class="row">
+        <div class="col-md-4">
+            <div class="form-check form-check-inline"> 
+              <div th:if="${tipoP == 'ALL'}">
+            	<input type="radio" name="tipo" value="ALL" checked="checked" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>All</Strong> &nbsp;&nbsp;
+            	<input type="radio" name="tipo" value="PF" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>Pessoa Física</Strong> &nbsp;&nbsp;
+            	<input type="radio" name="tipo" value="PJ" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>Pessoa Jurídica</Strong>
+              </div>
+              <div th:if="${tipoP == 'PF'}">
+            	<input type="radio" name="tipo" value="ALL" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>All</Strong> &nbsp;&nbsp;
+            	<input type="radio" name="tipo" value="PF" checked="checked" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>Pessoa Física</Strong> &nbsp;&nbsp;
+            	<input type="radio" name="tipo" value="PJ" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>Pessoa Jurídica</Strong>
+              </div>
+              <div th:if="${tipoP == 'PJ'}">
+            	<input type="radio" name="tipo" value="ALL" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>All</Strong> &nbsp;&nbsp;
+            	<input type="radio" name="tipo" value="PF" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>Pessoa Física</Strong> &nbsp;&nbsp;
+            	<input type="radio" name="tipo" value="PJ" checked="checked" th:onclick="'alterarTipo(' + this.value + ');'" /> <Strong>Pessoa Jurídica</Strong>
+              </div>
+            </div>        
+        </div>
+        
+        <div class="col-md-6">
+            <form th:action="@{/SportsX/pesquisar}" th:method="post" th:object="${pesquisa}">
+            <div class="row">
+                <div class="col-md-1">
+                    <i class="fas fa-search h4 text-body"></i>
+                </div>
+                <!--end of col-->
+                <div class="col-md-4">
+                	<input id="tipo" type="hidden" th:field="*{tipo}" th:value="*{tipo}"/>
+                    <input id="nome" th:field="*{nome}" class="form-control" type="search" placeholder="Procurar por nome"/>
+                 </div>
+                <!--end of col-->
+                <div class="col-md-1">
+                    <button class="btn btn-primary" type="submit">Procurar</button>
+                </div>
+                <!--end of col-->
+            </div>
+            </form>
+        </div>
+        
+        <div class="col-md-2" dir="rtl" align="right">
+        		<a class="btn btn-primary" th:href="@{/SportsX/cadastrar}">Novo</a>  
+        </div>
+    </div>        
+   
+    <hr />
+    
+    <div class="row">
+      <div class="col-md-12">
+       <div th:if="${clientes != null}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Razão Social</th>
+                <th>Documento</th>
+                <th>Telefones</th>
+                <th>PontoS</th>
+                <th>Desconto</th>
+                <th>Classificação</th>
+                <th>Ação</th>
+            </tr>
+            </thead>
+            <tr th:each="cliente : ${clientes}">
+                <td >
+                    <a th:text="${cliente.nome}" >nome</a>
+                    <!--  th:href="@{/playlists/{id}/musicas/listar(id=${playlist.id})}" -->
+                </td>
+                <td th:text="${cliente.razao_social}">razao_social</td>
+                <td th:text="${cliente.documentoStr}">documento</td>
+                <td th:text="${cliente.telefonesStr}" >telefones</td>
+                <td th:text="${cliente.pontos}">pontos</td>
+                <td th:text="${cliente.descontoStr}">desconto</td>
+                <td th:text="${cliente.classificacao}">classificacao</td>
+                <td>
+                    <a class="btn btn-sm btn-info" th:href="@{/SportsX/cliente/{id}/editar(id=${cliente.id})}">Editar</a>
+                    <!-- <a class="btn btn-sm btn-danger" th:href="@{/playlists/{id}/remover(id=${cliente.id})}">Excluir</a>  -->
+                </td>
+            </tr>
+        </table>
+       </div>
+        <div th:if="${#lists.isEmpty(clientes)}">
+	        <div class="alert alert-info" role="alert">
+	            <span class="glyphicon glyphicon-exclamation-sign"></span>
+	            Nenhum registro encontrado!
+	        </div>
+    	</div>
+      </div>
+    </div>
+
+   <hr/>
+   <footer class="footer">
+       <p>© 2019 SportsX</p>
+   </footer>
+</div>
+</body>
+</html>
